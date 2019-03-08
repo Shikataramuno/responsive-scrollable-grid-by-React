@@ -41,7 +41,8 @@ export class MemberList extends Component {
     }
   }
 
-  handleChanged(member, e) {
+  handleChanged = (member, e) => {
+    console.log(member);
     let list = this.state.memberList;
     const target = list.find(rec => {
       return rec.id === member.id
@@ -50,7 +51,7 @@ export class MemberList extends Component {
     this.setState({memberList: list})
   }
 
-  render() {
+  list = () => {
     return (
       <div className="data-field">
         {
@@ -93,6 +94,46 @@ export class MemberList extends Component {
         }
       </div>
     );
+  }
+
+  flist(props) {
+    return (
+      <div className="data-field">
+        {
+          props.memberList.map((member, row) => {
+            return (
+             <div className="table-row wrapper attributes data" key={row}>{
+                props.columns.map((name,idx) => {
+                  if(name === "admin") {
+                    return (
+                      <div className={name} key={idx}>
+                        <Form.Check type="checkbox" variant="success" checked={member[name]} onChange={props.dispatch.bind(this, member)}/>
+                      </div>
+                    )
+                  } else if(name === "progress") {
+                    return (
+                      <div className={name} key={idx}>
+                        <ProgressBar variant="success" now={member[name]} label={`${member[name]}%`} />
+                      </div>
+                    )
+                  } else {
+                    return (
+                      <div className={name} key={idx}>
+                        {member[name]}
+                      </div>
+                    )
+                  }
+                }, this)
+              }</div>
+            );
+          }, this)
+        }
+      </div>
+    );
+  }
+  render () {
+    return this.list();
+    // return <this.flist memberList={this.state.memberList} columns={this.state.columns} dispatch={this.handleChanged}/>
   }
 }
   

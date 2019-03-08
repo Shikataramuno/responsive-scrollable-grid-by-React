@@ -107,7 +107,7 @@ export class MemberList extends Component {
                   if(name === "admin") {
                     return (
                       <div className={name} key={idx}>
-                        <Form.Check type="checkbox" variant="success" checked={member[name]} onChange={props.dispatch.bind(this, member)}/>
+                        <Form.Check type="checkbox" variant="success" checked={member[name]} onChange={props.handleChanged.bind(this, member)}/>
                       </div>
                     )
                   } else if(name === "progress") {
@@ -132,8 +132,8 @@ export class MemberList extends Component {
     );
   }
   render () {
-    return this.list();
-    // return <this.flist memberList={this.state.memberList} columns={this.state.columns} dispatch={this.handleChanged}/>
+    // return this.list();
+    return <this.flist memberList={this.state.memberList} columns={this.state.columns} handleChanged={this.handleChanged}/>
   }
 }
   

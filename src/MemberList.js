@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import {Form, ProgressBar} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './BlogApp.css';
+import './MemberList.css';
 
-export class BlogApp extends Component {
+export class MemberList extends Component {
 
   constructor(props) {
+    // super(...arguments);
     super(props);
     this.state = {
       columns: ['id', 'name', 'admin', 'address', 'progress'],
@@ -38,57 +39,44 @@ export class BlogApp extends Component {
         {id: 26, name: 'zzzz', admin: true, progress: 80, address: 'zzzz@shikataramuno.com'}
       ]
     }
-//    this.handleChanged = this.handleChanged.bind(this);
   }
 
-  Blog(props) {
-    const sidebar = (
-      <ul>
-        {props.memberList.map((member) =>
-          <li key={member.id}>
-            {member.name}
-          </li>
-        )}
-      </ul>
-    );
-    const content = props.memberList.map((member) =>
-      <div key={member.id}>
-        <h3>{member.title}</h3>
-        <p>{member.content}</p>
-      </div>
-    );
-    return (
-      <div>
-        {sidebar}
-        <hr />
-        {content}
-      </div>
-    );
+  handleChanged(member, e) {
+    let list = this.state.memberList;
+    const target = list.find(rec => {
+      return rec.id === member.id
+    })
+    target.admin = !target.admin;
+    this.setState({memberList: list})
   }
 
-  handleChanged(e) {
-    console.log('handleCheckBoxChanged');
-    console.log(e);
-  }
-
-  list(props) {
+  render() {
     return (
       <div className="data-field">
         {
-          props.memberList.map((member, row) => {
+          this.state.memberList.map((member, row) => {
             return (
              <div className="table-row wrapper attributes data" key={row}>{
-                props.columns.map((name,idx) => {
+                this.state.columns.map((name,idx) => {
                   if(name === "admin") {
                     return (
                       <div className={name} key={idx}>
-                        <Form.Check type="checkbox" variant="success" checked={member[name]} onChange={this.handleChanged}/>
+                        <Form.Check
+                          type="checkbox"
+                          variant="success"
+                          checked={member[name]}
+                          onChange={this.handleChanged.bind(this, member)}
+                        />
                       </div>
                     )
                   } else if(name === "progress") {
                     return (
                       <div className={name} key={idx}>
-                        <ProgressBar variant="success" now={member[name]} label={`${member[name]}%`} />
+                        <ProgressBar
+                          variant="success" 
+                          now={member[name]}
+                          label={`${member[name]}%`}
+                        />
                       </div>
                     )
                   } else {
@@ -98,19 +86,13 @@ export class BlogApp extends Component {
                       </div>
                     )
                   }
-                }, this)
+                })
               }</div>
             );
-          }, this)
+          })
         }
       </div>
     );
   }
-
-  render () {
-    return (
-      // <this.Blog posts={this.state.posts} />
-      <this.list memberList={this.state.memberList} columns={this.state.columns} />
-    );
-  }
 }
+  

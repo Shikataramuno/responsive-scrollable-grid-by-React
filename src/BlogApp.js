@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './BlogApp.css';
 
 export class BlogApp extends Component {
 
@@ -42,10 +43,16 @@ export class BlogApp extends Component {
     console.log(props.posts);
     console.log(props.columns);
     return (
-      <div>
+      <div className="data-field">
         {
-          props.posts.map(post => {
-            return props.columns.map((name,idx) => <div key={idx}>{post[name]}</div>);
+          props.posts.map((post, row) => {
+            return (
+             <div className="table-row wrapper attributes data" key={row}>{
+                props.columns.map((name,idx) =>
+                  <div className={name} key={idx}>{post[name]}</div>
+                )
+              }</div>
+            );
           })
         }
       </div>

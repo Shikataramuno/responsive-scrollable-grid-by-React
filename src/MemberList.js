@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Form, ProgressBar} from 'react-bootstrap';
+import {Row, Col, Form, ProgressBar} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './MemberList.css';
 
@@ -37,11 +37,24 @@ export class MemberList extends Component {
         {id: 24, name: 'xxxx', admin: false, progress: 60, address: 'xxxx@shikataramuno.com'},
         {id: 25, name: 'yyyy', admin: false, progress: 70, address: 'yyyy@shikataramuno.com'},
         {id: 26, name: 'zzzz', admin: true, progress: 80, address: 'zzzz@shikataramuno.com'}
-      ]
+      ],
+      sortOrders: {},
+      sortKey: ""
     }
   }
 
-  handleChanged = (member, e) => {
+  filter = (e) => {
+    const filter = e.target.value;
+    console.log('onFilterChanged : ' + filter);
+  }
+  sortBy = (name, e) => {
+    console.log("sortBy : " +  name);
+    this.setState({sortKey: name});
+    let sortOrders = this.state.sortOrders
+    sortOrders[name] *= -1;
+    this.setState({sortOrders: sortOrders});
+  }
+  handleAdminChanged = (member, e) => {
     console.log(member);
     let list = this.state.memberList;
     const target = list.find(rec => {
@@ -51,14 +64,70 @@ export class MemberList extends Component {
     this.setState({memberList: list})
   }
 
-  list = () => {
+  dhead = (props) => {
+    return (
+      <div className="pc table-row header">
+        <Row>
+          <Form.Label className="title" >メンバ一覧 </Form.Label>
+        </Row>
+        <Row className='query-box'>
+          <Col xs={2}>
+            <Form.Control as="input"
+              type="text"
+              id="search"
+              className="filter"
+              placeholder="フィルタ文字列"
+              onChange={props.filter.bind(this)}/>
+          </Col>
+          <Col xs={10}>
+          </Col>
+        </Row>
+        <div className="wrapper attributes header">
+          {
+            props.columns.map((name,col) => {
+              if (props.sortKey === name) {
+                if (props.sortOrders[name] > 0){
+                  return (
+                    <div className={"active " + name}
+                      key={col}
+                      onClick={props.sortBy.bind(this,name)}>
+                      {name}
+                      <span className={"arrow asc"}></span>
+                    </div>
+                  )
+                } else {
+                  return (
+                    <div className={"active " + name}
+                      key={col}
+                      onClick={props.sortBy.bind(this,name)}>
+                      {name}
+                      <span className="arrow dsc"></span>
+                    </div>
+                  )
+                }  
+              } else {
+                return (
+                  <div className={name}
+                    key={col}
+                    onClick={props.sortBy.bind(this,name)}>
+                    {name}
+                  </div>
+                )
+              }
+            })
+          }
+        </div>
+      </div>
+    );   
+  }
+  dlist = (props) => {
     return (
       <div className="data-field">
         {
-          this.state.memberList.map((member, row) => {
+          props.memberList.map((member, row) => {
             return (
              <div className="table-row wrapper attributes data" key={row}>{
-                this.state.columns.map((name,idx) => {
+                props.columns.map((name,idx) => {
                   if(name === "admin") {
                     return (
                       <div className={name} key={idx}>
@@ -66,7 +135,7 @@ export class MemberList extends Component {
                           type="checkbox"
                           variant="success"
                           checked={member[name]}
-                          onChange={this.handleChanged.bind(this, member)}
+                          onChange={props.handleAdminChanged.bind(this, member)}
                         />
                       </div>
                     )
@@ -74,7 +143,7 @@ export class MemberList extends Component {
                     return (
                       <div className={name} key={idx}>
                         <ProgressBar
-                          variant="success" 
+                          variant="success"
                           now={member[name]}
                           label={`${member[name]}%`}
                         />
@@ -95,45 +164,32 @@ export class MemberList extends Component {
       </div>
     );
   }
-
-  flist(props) {
+  list = () => {
     return (
-      <div className="data-field">
-        {
-          props.memberList.map((member, row) => {
-            return (
-             <div className="table-row wrapper attributes data" key={row}>{
-                props.columns.map((name,idx) => {
-                  if(name === "admin") {
-                    return (
-                      <div className={name} key={idx}>
-                        <Form.Check type="checkbox" variant="success" checked={member[name]} onChange={props.handleChanged.bind(this, member)}/>
-                      </div>
-                    )
-                  } else if(name === "progress") {
-                    return (
-                      <div className={name} key={idx}>
-                        <ProgressBar variant="success" now={member[name]} label={`${member[name]}%`} />
-                      </div>
-                    )
-                  } else {
-                    return (
-                      <div className={name} key={idx}>
-                        {member[name]}
-                      </div>
-                    )
-                  }
-                }, this)
-              }</div>
-            );
-          }, this)
-        }
+      <div className="container-fluid">
+        <this.dhead
+          columns={this.state.columns}
+          sortKey={this.state.sortKey}
+          sortOrders={this.state.sortOrders}
+          filter={this.filter}
+          sortBy={this.sortBy}/>
+        <this.dlist
+          memberList={this.state.memberList}
+          columns={this.state.columns}
+          handleAdminChanged={this.handleAdminChanged}/>        
       </div>
     );
   }
   render () {
     // return this.list();
-    return <this.flist memberList={this.state.memberList} columns={this.state.columns} handleChanged={this.handleChanged}/>
+    return <this.list/>
+  }
+  componentDidMount () {
+    let orders = {}
+    this.state.columns.forEach((key) => {
+      orders[key] = 1;
+    })
+    this.setState({sortOrders: orders}); 
   }
 }
   

@@ -85,35 +85,19 @@ export class MemberList extends Component {
         <div className="wrapper attributes header">
           {
             props.columns.map((name,col) => {
-              if (props.sortKey === name) {
-                if (props.sortOrders[name] > 0){
-                  return (
-                    <div className={"active " + name}
-                      key={col}
-                      onClick={props.sortBy.bind(this,name)}>
-                      {name}
-                      <span className={"arrow asc"}></span>
-                    </div>
-                  )
-                } else {
-                  return (
-                    <div className={"active " + name}
-                      key={col}
-                      onClick={props.sortBy.bind(this,name)}>
-                      {name}
-                      <span className="arrow dsc"></span>
-                    </div>
-                  )
-                }  
-              } else {
-                return (
-                  <div className={name}
-                    key={col}
-                    onClick={props.sortBy.bind(this,name)}>
-                    {name}
-                  </div>
-                )
-              }
+              const className = props.sortKey === name ? "active " + name : name
+              const arrow =
+                props.sortKey === name ? 
+                (props.sortOrders[name] > 0? <span className={"arrow asc"}></span> : <span className="arrow dsc"></span>) :
+                "";
+              return (
+                <div className={className}
+                  key={col}
+                  onClick={props.sortBy.bind(this,name)}>
+                  {name}
+                  {arrow}
+                </div>
+              )
             })
           }
         </div>

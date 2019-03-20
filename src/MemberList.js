@@ -26,7 +26,7 @@ export class MemberList extends Component {
     });
     this.setState({members: members})
   }
-  sortBy = (name, e) => {
+  sortBy = (name) => {
     let sortOrders = this.state.sortOrders
     sortOrders[name] = sortOrders[name] * -1;
     let members = this.state.members;
@@ -40,7 +40,7 @@ export class MemberList extends Component {
     this.setState({members: members})
 
   }
-  handleAdminChanged = (member, e) => {
+  handleAdminChanged = (member) => {
     console.log(member);
     let list = this.state.members;
     const target = list.find(rec => {
@@ -63,7 +63,7 @@ export class MemberList extends Component {
               id="search"
               className="filter"
               placeholder="フィルタ文字列"
-              onChange={props.filter.bind(this)}/>
+              onChange={(e) => props.filter(e)}/>
           </Col>
           <Col xs={10}>
           </Col>
@@ -79,7 +79,7 @@ export class MemberList extends Component {
               return (
                 <div className={className}
                   key={col}
-                  onClick={props.sortBy.bind(this,name)}>
+                  onClick={() => props.sortBy(name)}>
                   {name}
                   {arrow}
                 </div>
@@ -105,7 +105,7 @@ export class MemberList extends Component {
                           type="checkbox"
                           variant="success"
                           checked={member[name]}
-                          onChange={props.handleAdminChanged.bind(this, member)}
+                          onChange={() => props.handleAdminChanged(member)}
                         />
                       </div>
                     )

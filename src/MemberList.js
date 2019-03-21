@@ -63,7 +63,7 @@ export class MemberList extends Component {
               id="search"
               className="filter"
               placeholder="フィルタ文字列"
-              onChange={(e) => props.filter(e)}/>
+              onChange={this.filter}/>
           </Col>
           <Col xs={10}>
           </Col>
@@ -73,13 +73,13 @@ export class MemberList extends Component {
             props.columns.map((name,col) => {
               const className = props.sortKey === name ? "active " + name : name
               const arrow =
-                props.sortKey === name ? 
+              props.sortKey === name ? 
                 (props.sortOrders[name] > 0? <span className={"arrow asc"}></span> : <span className="arrow dsc"></span>) :
                 "";
               return (
                 <div className={className}
                   key={col}
-                  onClick={() => props.sortBy(name)}>
+                  onClick={() => this.sortBy(name)}>
                   {name}
                   {arrow}
                 </div>
@@ -105,7 +105,7 @@ export class MemberList extends Component {
                           type="checkbox"
                           variant="success"
                           checked={member[name]}
-                          onChange={() => props.handleAdminChanged(member)}
+                          onChange={() => this.handleAdminChanged(member)}
                         />
                       </div>
                     )
@@ -141,12 +141,10 @@ export class MemberList extends Component {
           columns={this.state.columns}
           sortKey={this.state.sortKey}
           sortOrders={this.state.sortOrders}
-          filter={this.filter}
-          sortBy={this.sortBy}/>
+        />
         <this.dlist
           members={this.state.members}
-          columns={this.state.columns}
-          handleAdminChanged={this.handleAdminChanged}/>        
+          columns={this.state.columns}/>
       </div>
     );
   }

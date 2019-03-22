@@ -50,7 +50,7 @@ export class MemberList extends Component {
     this.setState({members: list})
   }
 
-  dhead = (props) => {
+  dhead = () => {
     return (
       <div className="pc table-row header">
         <Row>
@@ -70,11 +70,11 @@ export class MemberList extends Component {
         </Row>
         <div className="wrapper attributes header">
           {
-            props.columns.map((name,col) => {
-              const className = props.sortKey === name ? "active " + name : name
+            this.state.columns.map((name,col) => {
+              const className = this.state.sortKey === name ? "active " + name : name
               const arrow =
-              props.sortKey === name ? 
-                (props.sortOrders[name] > 0? <span className={"arrow asc"}></span> : <span className="arrow dsc"></span>) :
+              this.state.sortKey === name ? 
+                (this.state.sortOrders[name] > 0? <span className={"arrow asc"}></span> : <span className="arrow dsc"></span>) :
                 "";
               return (
                 <div className={className}
@@ -90,14 +90,14 @@ export class MemberList extends Component {
       </div>
     );   
   }
-  dlist = (props) => {
+  dlist = () => {
     return (
       <div className="data-field">
         {
-          props.members.map((member, row) => {
+          this.state.members.map((member, row) => {
             return (
              <div className="table-row wrapper attributes data" key={row}>{
-                props.columns.map((name,idx) => {
+                this.state.columns.map((name,idx) => {
                   if(name === "admin") {
                     return (
                       <div className={name} key={idx}>
@@ -137,14 +137,8 @@ export class MemberList extends Component {
   list = () => {
     return (
       <div className="container-fluid">
-        <this.dhead
-          columns={this.state.columns}
-          sortKey={this.state.sortKey}
-          sortOrders={this.state.sortOrders}
-        />
-        <this.dlist
-          members={this.state.members}
-          columns={this.state.columns}/>
+        <this.dhead />
+        <this.dlist />
       </div>
     );
   }

@@ -3,13 +3,14 @@ import {Row, Col, Form, ProgressBar} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './MemberList.css';
 
-export class MemberList extends Component {
+export default class MemberList extends Component {
 
+  columns = ['id', 'name', 'admin', 'address', 'progress'];
+  memberList = [];
   constructor(props) {
     // super(...arguments);
     super(props);
     this.state = {
-      columns: ['id', 'name', 'admin', 'address', 'progress'],
       members: [],
       sortOrders: {},
       sortKey: ""
@@ -70,7 +71,7 @@ export class MemberList extends Component {
         </Row>
         <div className="wrapper attributes header">
           {
-            this.state.columns.map((name,col) => {
+            this.columns.map((name,col) => {
               const className = this.state.sortKey === name ? "active " + name : name
               const arrow =
               this.state.sortKey === name ? 
@@ -97,7 +98,7 @@ export class MemberList extends Component {
           this.state.members.map((member, row) => {
             return (
              <div className="table-row wrapper attributes data" key={row}>{
-                this.state.columns.map((name,idx) => {
+                this.columns.map((name,idx) => {
                   if(name === "admin") {
                     return (
                       <div className={name} key={idx}>
@@ -147,7 +148,7 @@ export class MemberList extends Component {
   }
   componentDidMount () {
     let orders = {}
-    this.state.columns.forEach((key) => {
+    this.columns.forEach((key) => {
       orders[key] = 1;
     })
     this.memberList = [
@@ -182,4 +183,5 @@ export class MemberList extends Component {
     this.setState({members: this.memberList});
   }
 }
-  
+
+// export default MemberList;
